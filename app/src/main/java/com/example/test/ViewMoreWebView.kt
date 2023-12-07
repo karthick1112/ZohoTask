@@ -1,6 +1,7 @@
 package com.example.test
 
 import android.annotation.SuppressLint
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -10,6 +11,7 @@ import android.webkit.WebViewClient
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 
 
@@ -41,6 +43,7 @@ class ViewMoreWebView : AppCompatActivity() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("SetJavaScriptEnabled")
     private fun webViewSetup(urll: String) {
         viewMoreWB.webViewClient = WebViewClient()
@@ -55,27 +58,6 @@ class ViewMoreWebView : AppCompatActivity() {
             settings.loadWithOverviewMode = true
             settings.useWideViewPort = true
             settings.javaScriptEnabled = true
-//            viewMoreWB.setWebViewClient(object : WebViewClient() {
-//                override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
-//                    view.loadUrl(url)
-//                    return true
-//                }
-//
-//                override fun onPageFinished(view: WebView, url: String) {
-//                    idPBLoading!!.visibility = View.GONE
-//
-//                }
-//
-//                override fun onReceivedError(
-//                    view: WebView,
-//                    errorCode: Int,
-//                    description: String,
-//                    failingUrl: String
-//                ) {
-//                    Toast.makeText(this@ViewMoreWebView, "Error:$description", Toast.LENGTH_SHORT)
-//                        .show()
-//                }
-//            })
             settings.cacheMode = WebSettings.LOAD_NO_CACHE
             settings.databaseEnabled = false
             settings.domStorageEnabled = false

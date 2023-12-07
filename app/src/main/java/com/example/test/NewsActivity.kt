@@ -55,10 +55,13 @@ class NewsActivity : HomeScreen(), OnLoadMoreListener {
 
         newsListAdapter = NewsListAdapter(
             this@NewsActivity,
-            getNewsListArray, activityNewsactivity.nestedSroll, this@NewsActivity
-        )
+            getNewsListArray, activityNewsactivity.nestedSroll, this@NewsActivity)
+
+
         rvNewsList.layoutManager = LinearLayoutManager(this@NewsActivity)
         rvNewsList.adapter = newsListAdapter
+
+
         getNewsListAPIFromServer(paged)
 
         fbScrollTop!!.setOnClickListener(object : View.OnClickListener {
@@ -67,6 +70,7 @@ class NewsActivity : HomeScreen(), OnLoadMoreListener {
             }
 
         })
+
         activityNewsactivity.nestedSroll.setOnScrollChangeListener(object :
             NestedScrollView.OnScrollChangeListener {
             override fun onScrollChange(
@@ -91,12 +95,10 @@ class NewsActivity : HomeScreen(), OnLoadMoreListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 return false
             }
-
             override fun onQueryTextChange(newText: String?): Boolean {
                 fileterList(newText)
                 return true
             }
-
         })
         bck.setOnClickListener {
             onBackPressed()

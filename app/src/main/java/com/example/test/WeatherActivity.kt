@@ -127,8 +127,6 @@ class WeatherActivity : HomeScreen() {
                         val longi = locationGPS.longitude
                         latitude = lat.toString()
                         longitude = longi.toString()
-                        Log.e("Coordinates", latitude.toString())
-                        Log.e("Coordinates", longitude.toString())
                         getWeatherListApi()
                     } else {
                     }
@@ -169,7 +167,6 @@ class WeatherActivity : HomeScreen() {
                 ?.subscribeOn(Schedulers.io())
                 ?.subscribe(object : Observer<GetWeatherListResponseBody> {
                     override fun onCompleted() {
-                        //TODO:
                     }
 
                     override fun onError(e: Throwable?) {
