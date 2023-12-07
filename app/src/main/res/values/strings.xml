@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">WeatherApp</string>
+    <string name="news">NEWS</string>
+    <string name="weather">WEATHER</string>
+    <string name="todays_news">TODAYS NEWS</string>
+    <string name="view_more">View More</string>
+    <string name="view_less">View Less</string>
+    <string name="todays_weather">TODAYS WEATHER</string>
+    <string name="my_location">MY LOCATION</string>
+    <string name="pressure">Pressure</string>
+    <string name="humidity">Humidity</string>
+    <string name="feels_like">Feels Like</string>
+    <string name="visibility">Visibility</string>
+    <string name="webview">WEBVIEW</string>
+    <string name="cancel">Cancel</string>
+    <string name="open_setting">Open Setting</string>
+    <string name="permission_needed">Permission Needed</string>
+    <string name="need_permission">Enable Location to get the Current Weather Details</string>
+    <string name="degree_celsius">°C</string>
+    <string name="searchhere">Search Here...</string>
+    <string name="check_internet">Please Check your Internet Connection</string>
+
+</resources>
