@@ -3,7 +3,6 @@ package com.example.test
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
-import android.view.MenuItem
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.ProgressBar
@@ -18,6 +17,8 @@ import com.example.test.Interface.OnLoadMoreListener
 import com.example.test.ModelClass.GetNewsListResponseBody
 import com.example.test.NetworkUtil.NetworkUtil
 import com.example.test.Retrofit.ApiClient
+import com.example.test.Room.OfflineRoomDatabase
+import com.example.test.Room.TblNewsList
 import com.example.test.databinding.NewsLayoutBinding
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import rx.Observer
@@ -40,29 +41,39 @@ class NewsActivity : HomeScreen(), OnLoadMoreListener {
     var subscriptions: Subscription? = null
     var paged: Int = 0
     var fbScrollTop: FloatingActionButton? = null
+    private var offlineRoomDatabase: OfflineRoomDatabase? = null
+    var tblNewsList: List<TblNewsList> = ArrayList()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityNewsactivity = NewsLayoutBinding.inflate(layoutInflater)
         setView(activityNewsactivity.getRoot(), "News")
         mcontext = this
         mactivity = mcontext as NewsActivity
+
+        //id
         rvNewsList = findViewById(R.id.rvNewsList)
         bck = findViewById(R.id.bck)
         idPBLoading = findViewById(R.id.idPBLoading)
         fbScrollTop = findViewById(R.id.fbScrollTop)
         searchView = findViewById(R.id.searchview)
+
         getNewsListArray = ArrayList()
 
+        offlineRoomDatabase =
+            OfflineRoomDatabase.getDataBaseInstance(this@NewsActivity)
         newsListAdapter = NewsListAdapter(
             this@NewsActivity,
-            getNewsListArray, activityNewsactivity.nestedSroll, this@NewsActivity)
+            tblNewsList, activityNewsactivity.nestedSroll, this@NewsActivity)
 
 
         rvNewsList.layoutManager = LinearLayoutManager(this@NewsActivity)
         rvNewsList.adapter = newsListAdapter
 
-
-        getNewsListAPIFromServer(paged)
+        if (NetworkUtil.checkActiveInternetConnection(this@NewsActivity)) {
+            getNewsListAPIFromServer(paged)
+        }else{
+            getListFromoffline()
+        }
 
         fbScrollTop!!.setOnClickListener(object : View.OnClickListener {
             override fun onClick(p0: View?) {
@@ -107,8 +118,8 @@ class NewsActivity : HomeScreen(), OnLoadMoreListener {
 
     private fun fileterList(query: String?) {
         if (query != null){
-            var filterListData = ArrayList<GetNewsListResponseBody.Result>()
-            for (i in getNewsListArray){
+            var filterListData = ArrayList<TblNewsList>()
+            for (i in tblNewsList){
                 if(i.title!!.toLowerCase(Locale.ROOT).contains(query)){
                     filterListData.add(i)
                 }
@@ -141,16 +152,36 @@ class NewsActivity : HomeScreen(), OnLoadMoreListener {
                         if (response != null && response.results != null && response.results!!.size > 0) {
 
                             getNewsListArray!!.addAll(response.results!!)
-                            newsListAdapter.notifyDataSetChanged(getNewsListArray)
-                            if (paged > 2) {
-                                fbScrollTop!!.show()
+                            for (i in 0..response!!.results!!.size-1){
+                                var tblListbyId : TblNewsList = offlineRoomDatabase!!.iTblNewsList()!!.getNewsListbyId(response!!.results!!.get(i).id!!)
+                                if(tblListbyId == null) {
+                                    var tbllist: TblNewsList = TblNewsList()
+                                    tbllist.newsid = response!!.results!!.get(i).id!!
+                                    tbllist.title = response!!.results!!.get(i).title!!
+                                    tbllist.url = response!!.results!!.get(i).url!!
+                                    tbllist.image_url = response!!.results!!.get(i).imageUrl!!
+                                    tbllist.summary = response!!.results!!.get(i).summary!!
+                                    offlineRoomDatabase!!.iTblNewsList()!!.insertNews(tbllist)
+                                }
                             }
+                            getListFromoffline()
+
                         }
                     }
 
                 })
         } else {
                 Toast.makeText(this,getString(R.string.check_internet),Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun getListFromoffline() {
+         tblNewsList = offlineRoomDatabase!!.iTblNewsList()!!.getAllNewsList()
+        if(tblNewsList != null && tblNewsList.size > 0){
+            newsListAdapter.notifyDataSetChanged(tblNewsList)
+            if (paged > 2) {
+                fbScrollTop!!.show()
+            }
         }
     }
 

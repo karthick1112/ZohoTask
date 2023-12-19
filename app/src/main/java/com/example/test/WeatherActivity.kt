@@ -70,7 +70,6 @@ class WeatherActivity : HomeScreen() {
         visibility = findViewById(R.id.visibility)
         sunrisetime = findViewById(R.id.sunrisetime)
         sunsettime = findViewById(R.id.sunsettime)
-
         bck = findViewById(R.id.bck)
 
         bck!!.setOnClickListener {
@@ -82,6 +81,7 @@ class WeatherActivity : HomeScreen() {
             arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
             REQUEST_LOCATION
         )
+
         locationManager = getSystemService(LOCATION_SERVICE) as LocationManager
 
         if (!locationManager!!.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {

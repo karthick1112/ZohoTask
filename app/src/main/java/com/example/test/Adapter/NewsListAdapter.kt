@@ -16,17 +16,18 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.test.Interface.OnLoadMoreListener
 import com.example.test.ModelClass.GetNewsListResponseBody
 import com.example.test.R
+import com.example.test.Room.TblNewsList
 import com.example.test.ViewMoreWebView
 import com.squareup.picasso.Picasso
 import java.util.Locale
 
 class NewsListAdapter(
     private val context: Context,
-    private var results: ArrayList<GetNewsListResponseBody.Result>,
+    private var results: List<TblNewsList>,
     nestedSroll: NestedScrollView,
     onLoadMoreListener: OnLoadMoreListener,
 ) : RecyclerView.Adapter<NewsListAdapter.MyViewHolder?>() {
-    var searchListDataall: List<GetNewsListResponseBody.Result>? = null
+    var searchListDataall: List<TblNewsList> = ArrayList()
     init {
         searchListDataall = results
     }
@@ -50,9 +51,9 @@ class NewsListAdapter(
                 holder.tvSummary!!.text = results.get(position).summary
             }
 
-            if(results.get(position).imageUrl != null && !results.get(position).imageUrl.equals("")){
+            if(results.get(position).image_url != null && !results.get(position).image_url.equals("")){
                 Picasso.get()
-                    .load(results.get(position).imageUrl)
+                    .load(results.get(position).image_url)
                     .error(context.resources.getDrawable(R.drawable.location_maps))
                     .fit()
                     .into(holder.thumImg);
@@ -81,7 +82,7 @@ class NewsListAdapter(
     }
 
     override fun getItemCount(): Int =  results.size
-    fun notifyDataSetChanged(newsListArray: ArrayList<GetNewsListResponseBody.Result>) {
+    fun notifyDataSetChanged(newsListArray: List<TblNewsList>) {
             this.results = newsListArray
             notifyDataSetChanged()
     }
